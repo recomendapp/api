@@ -1,25 +1,17 @@
 import { Database as PostgresSchema } from './__generated__/type.db';
-import {
-  FeedType,
-  JSONContent,
-  MediaMovie,
-  MediaPerson,
-  MediaTvSeries,
-  PlaylistLike,
-  Profile,
-  UserActivityMovie,
-  UserActivityTvSeries,
-  UserActivityType,
-  UserFollower,
-  UserFriend,
-  UserRecosMovie,
-  UserRecosTvSeries,
-  UserRecosType,
-  UserReview,
-  UserReviewMovieLike,
-  UserReviewTvSeriesLike,
-  UserWatchlistType,
-} from './type.db';
+
+export type JSONContent = {
+  [key: string]: any;
+  type?: string;
+  attrs?: Record<string, any>;
+  content?: JSONContent[];
+  marks?: {
+    type: string;
+    attrs?: Record<string, any>;
+    [key: string]: any;
+  }[];
+  text?: string;
+};
 
 type PostgresTables = PostgresSchema['public']['Tables'];
 type PostgresViews = PostgresSchema['public']['Views'];
@@ -70,39 +62,48 @@ type ViewExtensions = {
   /* ------------------------------- ACTIVITIES ------------------------------- */
   user_activities: {
     id: number;
-    type: UserActivityType;
-    media: MediaMovie | MediaTvSeries;
-    user?: Profile;
-    review?: UserReview | null;
+    type: Database['public']['Enums']['user_activity_type'];
+    media:
+      | Database['public']['Views']['media_movie']['Row']
+      | Database['public']['Views']['media_tv_series']['Row'];
+    user?: Database['public']['Views']['profile']['Row'];
+    review?:
+      | Database['public']['Tables']['user_reviews_movie']['Row']
+      | Database['public']['Tables']['user_reviews_tv_series']['Row']
+      | null;
   };
   /* -------------------------------------------------------------------------- */
   /* ------------------------------- WATCHLISTS ------------------------------- */
   user_watchlists: {
     id: number;
-    type: UserWatchlistType;
-    media: MediaMovie | MediaTvSeries;
+    type: Database['public']['Enums']['user_watchlist_type'];
+    media:
+      | Database['public']['Views']['media_movie']['Row']
+      | Database['public']['Views']['media_tv_series']['Row'];
   };
   /* -------------------------------------------------------------------------- */
   /* ---------------------------------- RECOS --------------------------------- */
   user_recos_aggregated: {
-    type: UserRecosType;
-    media: MediaMovie | MediaTvSeries;
+    type: Database['public']['Enums']['user_recos_type'];
+    media:
+      | Database['public']['Views']['media_movie']['Row']
+      | Database['public']['Views']['media_tv_series']['Row'];
     senders: {
-      user: Profile;
+      user: Database['public']['Views']['profile']['Row'];
       comment?: string | null;
       created_at: string;
     }[];
   };
   user_recos_movie_aggregated: {
     senders: {
-      user: Profile;
+      user: Database['public']['Views']['profile']['Row'];
       comment?: string | null;
       created_at: string;
     }[];
   };
   user_recos_tv_series_aggregated: {
     senders: {
-      user: Profile;
+      user: Database['public']['Views']['profile']['Row'];
       comment?: string | null;
       created_at: string;
     }[];
@@ -111,14 +112,14 @@ type ViewExtensions = {
   /* ---------------------------------- MEDIA --------------------------------- */
   media_movie: {
     id: number;
-    directors?: MediaPerson[];
+    directors?: Database['public']['Views']['media_person']['Row'][];
     genres?: {
       id: number;
       name: string;
     }[];
   };
   media_movie_aggregate_credits: {
-    movie: MediaMovie;
+    movie: Database['public']['Views']['media_movie']['Row'];
     credits: {
       job: string;
       credit_id: string;
@@ -127,14 +128,14 @@ type ViewExtensions = {
   };
   media_tv_series: {
     id: number;
-    created_by?: MediaPerson[];
+    created_by?: Database['public']['Views']['media_person']['Row'][];
     genres?: {
       id: number;
       name: string;
     }[];
   };
   media_tv_series_aggregate_credits: {
-    tv_series: MediaTvSeries;
+    tv_series: Database['public']['Views']['media_tv_series']['Row'];
     credits: {
       credit_id: string;
       department: string;
@@ -158,116 +159,116 @@ type ViewExtensions = {
   widget_most_recommended:
     | {
         type: 'movie';
-        media: MediaMovie;
+        media: Database['public']['Views']['media_movie']['Row'];
       }
     | {
         type: 'tv_series';
-        media: MediaTvSeries;
+        media: Database['public']['Views']['media_tv_series']['Row'];
       };
   /* -------------------------------------------------------------------------- */
 };
 
 type FunctionExtensions = {
   get_feed: {
-    activity_type: FeedType;
-    author: Profile;
+    activity_type: Database['public']['Enums']['feed_type'];
+    author: Database['public']['Views']['profile']['Row'];
   } & (
     | {
         activity_type: 'activity_movie';
-        content: UserActivityMovie;
+        content: Database['public']['Tables']['user_activities_movie']['Row'];
       }
     | {
         activity_type: 'activity_tv_series';
-        content: UserActivityTvSeries;
+        content: Database['public']['Tables']['user_activities_tv_series']['Row'];
       }
     | {
         activity_type: 'playlist_like';
-        content: PlaylistLike;
+        content: Database['public']['Tables']['playlists_likes']['Row'];
       }
     | {
         activity_type: 'review_movie_like';
-        content: UserReviewMovieLike;
+        content: Database['public']['Tables']['user_review_movie_likes']['Row'];
       }
     | {
         activity_type: 'review_tv_series_like';
-        content: UserReviewTvSeriesLike;
+        content: Database['public']['Tables']['user_review_tv_series_likes']['Row'];
       }
   );
   get_feed_cast_crew: {
-    person: MediaPerson;
+    person: Database['public']['Views']['media_person']['Row'];
   } & (
     | {
         media_type: 'movie';
-        media: MediaMovie;
+        media: Database['public']['Views']['media_movie']['Row'];
       }
     | {
         media_type: 'tv_series';
-        media: MediaTvSeries;
+        media: Database['public']['Views']['media_tv_series']['Row'];
       }
   );
   get_notifications:
     | {
         type: 'reco_sent_movie';
-        content: UserRecosMovie;
+        content: Database['public']['Tables']['user_recos_movie']['Row'];
       }
     | {
         type: 'reco_sent_tv_series';
-        content: UserRecosTvSeries;
+        content: Database['public']['Tables']['user_recos_tv_series']['Row'];
       }
     | {
         type: 'reco_completed_movie';
-        content: UserRecosMovie;
+        content: Database['public']['Tables']['user_recos_movie']['Row'];
       }
     | {
         type: 'reco_completed_tv_series';
-        content: UserRecosTvSeries;
+        content: Database['public']['Tables']['user_recos_tv_series']['Row'];
       }
     | {
         type: 'follower_request';
-        content: UserFollower;
+        content: Database['public']['Tables']['user_follower']['Row'];
       }
     | {
         type: 'follower_accepted';
-        content: UserFollower;
+        content: Database['public']['Tables']['user_follower']['Row'];
       }
     | {
         type: 'follower_created';
-        content: UserFollower;
+        content: Database['public']['Tables']['user_follower']['Row'];
       }
     | {
         type: 'friend_created';
-        content: UserFriend;
+        content: Database['public']['Tables']['user_friend']['Row'];
       };
   get_widget_most_recommended:
     | {
         type: 'movie';
-        media: MediaMovie;
+        media: Database['public']['Views']['media_movie']['Row'];
       }
     | {
         type: 'tv_series';
-        media: MediaTvSeries;
+        media: Database['public']['Views']['media_tv_series']['Row'];
       };
   get_widget_most_popular:
     | {
         type: 'movie';
-        media: MediaMovie;
+        media: Database['public']['Views']['media_movie']['Row'];
       }
     | {
         type: 'tv_series';
-        media: MediaTvSeries;
+        media: Database['public']['Views']['media_tv_series']['Row'];
       };
   get_ui_backgrounds:
     | {
         media_type: 'movie';
-        media: MediaMovie;
+        media: Database['public']['Views']['media_movie']['Row'];
       }
     | {
         media_type: 'tv_series';
-        media: MediaTvSeries;
+        media: Database['public']['Views']['media_tv_series']['Row'];
       };
   // Explore
   get_explore_in_view: {
-    movie: MediaMovie;
+    movie: Database['public']['Views']['media_movie']['Row'];
   };
 };
 // <END>

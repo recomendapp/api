@@ -3,6 +3,7 @@ import { TypedSupabaseClient } from 'src/common/supabase/typed-supabase-client';
 import { TYPESENSE_CLIENT } from 'src/common/typesense/typesense.module';
 import { Client as TypesenseClient } from 'typesense';
 import { SearchPlaylistsResponseDto } from './dto/search-playlists-response.dto';
+import { SearchPlaylistsQueryDto } from './dto/search-playlists-query.dto';
 
 @Injectable()
 export class PlaylistsSearchService {
@@ -11,13 +12,15 @@ export class PlaylistsSearchService {
     @Inject(TYPESENSE_CLIENT) private readonly typesenseClient: TypesenseClient,
   ) {}
 
-  async search(
-    query: string,
-    page: number = 1,
-    per_page: number = 10,
-    sort_by: string = 'created_at',
-    userId?: string,
-  ): Promise<SearchPlaylistsResponseDto> {
+  async search({
+    q: query,
+    page = 1,
+    per_page = 10,
+    sort_by = 'created_at',
+    userId,
+  }: SearchPlaylistsQueryDto & {
+    userId?: string;
+  }): Promise<SearchPlaylistsResponseDto> {
     const sortOrder = `${sort_by}:desc`;
 
     const searchParameters = {
@@ -73,8 +76,8 @@ export class PlaylistsSearchService {
 
   private getPlaylistPermissionFilter = (userId?: string): string => {
     return userId
-      ? `private:false || owner_id:=${userId} || guest_ids:=${userId}`
-      : 'private:false';
+      ? `is_private:false || owner_id:=${userId} || guest_ids:=${userId}`
+      : 'is_private:false';
   };
 
   private async hydratePlaylists(ids: number[]) {
