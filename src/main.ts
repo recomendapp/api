@@ -5,7 +5,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import validateEnv from './utils/validateEnv';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
@@ -21,15 +21,38 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: false,
+      },
+    }),
+  );
+
   const config = new DocumentBuilder()
     .setTitle('Recomend API')
     .setDescription('The API documentation for the Recomend application')
     .setVersion('1.0')
-    .addBearerAuth() // This enables JWT authentication in the Swagger UI
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT', // optional, arbitrary value for Swagger UI
+        in: 'header',
+        description: 'Enter JWT token',
+      },
+      'access-token', // This name is important for referencing this security scheme
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('api-docs', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Error during app bootstrap:', err);
+  process.exit(1);
+});
