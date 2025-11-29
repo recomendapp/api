@@ -18,7 +18,10 @@ export type PlaylistType = 'movie' | 'tv_series';
 
 @Exclude()
 export class PlaylistDto {
-  @ApiProperty({ description: 'The unique identifier of the playlist' })
+  @ApiProperty({
+    description: 'The unique identifier of the playlist',
+    example: 461,
+  })
   @Expose()
   @IsInt()
   @IsNotEmpty()
@@ -26,6 +29,7 @@ export class PlaylistDto {
 
   @ApiProperty({
     description: 'The timestamp of when the playlist was created',
+    example: '2025-11-18T17:26:00.26892+00:00',
   })
   @Expose()
   @IsISO8601()
@@ -34,43 +38,63 @@ export class PlaylistDto {
 
   @ApiPropertyOptional({
     description: 'The timestamp of when the playlist was last updated',
+    example: '2025-11-29T10:37:53.649544+00:00',
   })
   @Expose()
   @IsISO8601()
   @IsOptional()
   updated_at: string | null;
 
-  @ApiProperty({ description: 'The ID of the user who owns the playlist' })
+  @ApiProperty({
+    description: 'The ID of the user who owns the playlist',
+    example: 'f022c2ec-f97c-4c20-888c-afd801b4b1d4',
+  })
   @Expose()
   @IsString()
   @IsNotEmpty()
   user_id: string;
 
-  @ApiProperty({ description: 'The title of the playlist' })
+  @ApiProperty({
+    description: 'The title of the playlist',
+    example: 'Where cats shine',
+  })
   @Expose()
   @IsString()
   @IsNotEmpty()
   title: string;
 
-  @ApiPropertyOptional({ description: 'The description of the playlist' })
+  @ApiPropertyOptional({
+    description: 'The description of the playlist',
+    example: null,
+  })
   @Expose()
   @IsOptional()
   @IsString()
   description?: string | null;
 
-  @ApiPropertyOptional({ description: 'URL to the playlist poster image' })
+  @ApiPropertyOptional({
+    description: 'URL to the playlist poster image',
+    example:
+      'https://supabase.recomend.app/storage/v1/object/public/playlist_posters/461.5d7012cf-6b8b-432b-adad-a19884ef3f56.jpg',
+  })
   @Expose()
   @IsOptional()
   @IsUrl()
   poster_url?: string | null;
 
-  @ApiProperty({ description: 'Indicates if the playlist is private' })
+  @ApiProperty({
+    description: 'Indicates if the playlist is private',
+    example: false,
+  })
   @Expose()
   @IsBoolean()
   @IsNotEmpty()
   private: boolean;
 
-  @ApiProperty({ description: 'The number of items in the playlist' })
+  @ApiProperty({
+    description: 'The number of items in the playlist',
+    example: 15,
+  })
   @Expose()
   @IsInt()
   @Min(0)
@@ -79,6 +103,7 @@ export class PlaylistDto {
 
   @ApiProperty({
     description: 'The number of times the playlist has been saved',
+    example: 3,
   })
   @Expose()
   @IsInt()
@@ -86,7 +111,10 @@ export class PlaylistDto {
   @IsNotEmpty()
   saved_count: number;
 
-  @ApiProperty({ description: 'The number of likes the playlist has received' })
+  @ApiProperty({
+    description: 'The number of likes the playlist has received',
+    example: 7,
+  })
   @Expose()
   @IsInt()
   @Min(0)
@@ -96,6 +124,7 @@ export class PlaylistDto {
   @ApiProperty({
     description: 'The type of the playlist',
     enum: ['movie', 'tv_series'],
+    example: 'movie',
   })
   @Expose()
   @IsEnum(['movie', 'tv_series'])
