@@ -79,7 +79,10 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen({
+    port: Number(process.env.PORT) || 3000,
+    host: process.env.HOST ?? '0.0.0.0',
+  });
 }
 bootstrap().catch((err) => {
   console.error('Error during app bootstrap:', err);

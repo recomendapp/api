@@ -15,7 +15,6 @@ function validateEnv() {
     // Supabase
     SUPABASE_URL: url(),
     SUPABASE_ANON_KEY: str(),
-    SUPABASE_SERVICE_KEY: str(),
     SUPABASE_JWT_SECRET: str(),
 
     // Optional

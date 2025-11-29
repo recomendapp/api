@@ -11,7 +11,5 @@ Dockerfile
 test
 assets
 nest-cli.json
-tsconfig.json
-tsconfig.build.json
 eslint.config.mjs
 .prettierrc
