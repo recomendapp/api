@@ -6,6 +6,8 @@ export class BaseSearchQueryDto extends PaginationQueryDto {
   @ApiProperty({
     description: 'Search query string',
     example: 'my search',
+    type: String,
+    nullable: false,
   })
   @IsString()
   q: string;

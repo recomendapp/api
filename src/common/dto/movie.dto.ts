@@ -1,9 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 import {
   IsInt,
   IsString,
-  IsOptional,
   IsUrl,
   IsNumber,
   IsArray,
@@ -25,49 +24,54 @@ export class Movie {
   @ApiProperty({
     description: 'The title of the movie',
     example: 'Interstellar',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsString()
-  title?: string | null;
+  title: string | null;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Poster path of the movie',
     example: '/iawqQdFKI7yTUoSkDNP8gyV3J3r.jpg',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsString()
-  poster_path?: string | null;
+  poster_path: string | null;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Poster URL of the movie',
     example:
       'https://image.tmdb.org/t/p/original/iawqQdFKI7yTUoSkDNP8gyV3J3r.jpg',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsUrl()
-  poster_url?: string | null;
+  poster_url: string | null;
 
   @ApiProperty({
     description: 'Backdrop path of the movie',
     example: '/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsString()
-  backdrop_path?: string | null;
+  backdrop_path: string | null;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Backdrop URL of the movie',
     example:
       'https://image.tmdb.org/t/p/original/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsUrl()
-  backdrop_url?: string | null;
+  backdrop_url: string | null;
 
   @ApiProperty({
     type: () => Person,
@@ -75,10 +79,9 @@ export class Movie {
     description: 'Directors of the movie',
   })
   @Expose()
-  @IsOptional()
   @IsArray()
   @Type(() => Person)
-  directors?: Person[];
+  directors: Person[];
 
   @ApiProperty({
     type: () => Genre,
@@ -86,126 +89,158 @@ export class Movie {
     description: 'Genres of the movie',
   })
   @Expose()
-  @IsOptional()
   @IsArray()
   @Type(() => Genre)
-  genres?: Genre[];
+  genres: Genre[];
 
   @ApiProperty({
     description: 'Release date of the movie',
     example: '2014-11-05T00:00:00+00:00',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsDateString()
-  release_date?: string | null;
+  release_date: string | null;
 
   @ApiProperty({
     description: 'Overview of the movie',
     example:
       'The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsString()
-  overview?: string | null;
+  overview: string | null;
 
   @ApiProperty({
     description: 'Budget of the movie in USD',
     example: 165000000,
+    type: Number,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsInt()
-  budget?: number | null;
+  budget: number | null;
 
   @ApiProperty({
     description: 'Homepage URL of the movie',
     example: 'http://www.interstellarmovie.net/',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsUrl()
-  homepage?: string | null;
+  homepage: string | null;
 
   @ApiProperty({
     description: 'Revenue of the movie in USD',
     example: 746606706,
+    type: Number,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsInt()
-  revenue?: number | null;
+  revenue: number | null;
 
-  @ApiProperty({ description: 'Runtime of the movie in minutes', example: 169 })
+  @ApiProperty({
+    description: 'Runtime of the movie in minutes',
+    example: 169,
+    type: Number,
+    nullable: true,
+  })
   @Expose()
-  @IsOptional()
   @IsInt()
-  runtime?: number | null;
+  runtime: number | null;
 
-  @ApiProperty({ description: 'Original language of the movie', example: 'en' })
+  @ApiProperty({
+    description: 'Original language of the movie',
+    example: 'en',
+    type: String,
+    nullable: true,
+  })
   @Expose()
-  @IsOptional()
   @IsString()
-  original_language?: string | null;
+  original_language: string | null;
 
   @ApiProperty({
     description: 'Original title of the movie',
     example: 'Interstellar',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsString()
-  original_title?: string | null;
+  original_title: string | null;
 
-  @ApiProperty({ description: 'Status of the movie', example: 'Released' })
+  @ApiProperty({
+    description: 'Status of the movie',
+    example: 'Released',
+    type: String,
+    nullable: true,
+  })
   @Expose()
-  @IsOptional()
   @IsString()
-  status?: string | null;
+  status: string | null;
 
   @ApiProperty({
     description: 'Popularity score of the movie',
     example: 37.1433,
+    type: Number,
+    nullable: false,
   })
   @Expose()
   @IsNumber()
   popularity: number;
 
-  @ApiProperty({ description: 'Vote average of the movie', example: 8.463 })
+  @ApiProperty({
+    description: 'Vote average of the movie',
+    example: 8.463,
+    type: Number,
+    nullable: false,
+  })
   @Expose()
   @IsNumber()
   vote_average: number;
 
-  @ApiProperty({ description: 'Vote count of the movie', example: 38288 })
+  @ApiProperty({
+    description: 'Vote count of the movie',
+    example: 38288,
+    type: Number,
+    nullable: false,
+  })
   @Expose()
   @IsInt()
   vote_count: number;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Slug of the movie',
     example: '157336-interstellar',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsString()
-  slug?: string | null;
+  slug: string | null;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'URL to the movie page',
     example: '/film/157336-interstellar',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsUrl()
-  url?: string | null;
+  url: string | null;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Followers average rating of the movie',
     example: 9.2,
+    type: Number,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsNumber()
-  follower_avg_rating?: number | null;
+  follower_avg_rating: number | null;
 }

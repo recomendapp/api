@@ -17,21 +17,25 @@ The main **NestJS (with Fastify)**-based API service for the Recomend applicatio
 ## 📦 Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/recomendapp/api.git
    cd api
    ```
 
 2. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
 
 3. **Set up environment variables:**
+
    ```bash
    cp .env.template .env
    ```
-   *Add your environment variables to the `.env` file.*
+
+   _Add your environment variables to the `.env` file._
 
 4. **Run the development server:**
    ```bash
@@ -39,7 +43,9 @@ The main **NestJS (with Fastify)**-based API service for the Recomend applicatio
    ```
 
 ## 📚 API Documentation
+
 Explore the API routes and their documentation using the Swagger interface:
+
 - **Swagger UI Endpoint**: /api-docs
 - **OpenAPI JSON Schema Endpoint**: /api-docs-json
 - **Description**: Access the interactive Swagger UI to view and test all available API endpoints, including parameters and response formats. The raw OpenAPI JSON schema is also available.

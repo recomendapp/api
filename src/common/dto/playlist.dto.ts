@@ -1,9 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsInt,
   IsString,
   IsBoolean,
-  IsOptional,
   Min,
   IsEnum,
   IsNotEmpty,
@@ -21,6 +20,8 @@ export class Playlist {
   @ApiProperty({
     description: 'The unique identifier of the playlist',
     example: 461,
+    type: Number,
+    nullable: false,
   })
   @Expose()
   @IsInt()
@@ -30,24 +31,29 @@ export class Playlist {
   @ApiProperty({
     description: 'The timestamp of when the playlist was created',
     example: '2025-11-18T17:26:00.26892+00:00',
+    type: String,
+    nullable: false,
   })
   @Expose()
   @IsISO8601()
   @IsNotEmpty()
   created_at: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'The timestamp of when the playlist was last updated',
     example: '2025-11-29T10:37:53.649544+00:00',
+    type: String,
+    nullable: true,
   })
   @Expose()
   @IsISO8601()
-  @IsOptional()
   updated_at: string | null;
 
   @ApiProperty({
     description: 'The ID of the user who owns the playlist',
     example: 'f022c2ec-f97c-4c20-888c-afd801b4b1d4',
+    type: String,
+    nullable: false,
   })
   @Expose()
   @IsString()
@@ -57,34 +63,40 @@ export class Playlist {
   @ApiProperty({
     description: 'The title of the playlist',
     example: 'Where cats shine',
+    type: String,
+    nullable: false,
   })
   @Expose()
   @IsString()
   @IsNotEmpty()
   title: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'The description of the playlist',
     example: null,
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsString()
   description?: string | null;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'URL to the playlist poster image',
     example:
       'https://supabase.recomend.app/storage/v1/object/public/playlist_posters/461.5d7012cf-6b8b-432b-adad-a19884ef3f56.jpg',
+    type: String,
+    nullable: true,
   })
   @Expose()
-  @IsOptional()
   @IsUrl()
   poster_url?: string | null;
 
   @ApiProperty({
     description: 'Indicates if the playlist is private',
     example: false,
+    type: Boolean,
+    nullable: false,
   })
   @Expose()
   @IsBoolean()
@@ -94,6 +106,8 @@ export class Playlist {
   @ApiProperty({
     description: 'The number of items in the playlist',
     example: 15,
+    type: Number,
+    nullable: false,
   })
   @Expose()
   @IsInt()
@@ -104,6 +118,8 @@ export class Playlist {
   @ApiProperty({
     description: 'The number of times the playlist has been saved',
     example: 3,
+    type: Number,
+    nullable: false,
   })
   @Expose()
   @IsInt()
@@ -114,6 +130,8 @@ export class Playlist {
   @ApiProperty({
     description: 'The number of likes the playlist has received',
     example: 7,
+    type: Number,
+    nullable: false,
   })
   @Expose()
   @IsInt()
@@ -125,6 +143,8 @@ export class Playlist {
     description: 'The type of the playlist',
     enum: ['movie', 'tv_series'],
     example: 'movie',
+    type: String,
+    nullable: false,
   })
   @Expose()
   @IsEnum(['movie', 'tv_series'])
