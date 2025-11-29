@@ -55,11 +55,15 @@ async function bootstrap() {
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);
+
+  app.getHttpAdapter().get('/api-docs-json', (req, res) => {
+    res.send(document);
+  });
   // SwaggerModule.setup('api-docs', app, document);
   app.use(
     '/api-docs',
     apiReference({
-      content: document,
+      url: '/api-docs-json',
       withFastify: true,
       theme: 'purple',
     }),
