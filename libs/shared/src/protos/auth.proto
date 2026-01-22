@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthService {
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  string id = 1;
+  string email = 2;
+  int64 exp = 3;
+  // An optional error message. If present, validation failed.
+  optional string error = 4;
+}
