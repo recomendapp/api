@@ -1,22 +1,21 @@
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-
-import { SharedService } from '@app/shared';
-
-import { AuthModule } from './auth.module';
-import { AUTH_PACKAGE_NAME } from '@app/shared/protos/__generated__';
+import { AuthModule } from './app/auth.module';
+import { createGrpcOptions } from '@api/transport';
+import { env } from './env';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AuthModule);
-
-  const sharedService = app.get(SharedService);
-
-  app.connectMicroservice(
-    sharedService.getGrpcOptions('auth', AUTH_PACKAGE_NAME),
+  const app = await NestFactory.createMicroservice(
+    AuthModule,
+    createGrpcOptions({
+      packageName: 'auth',
+      protoDomain: 'auth',
+      protoFile: 'auth.proto',
+      url: env.AUTH_GRPC_BIND,
+    }),
   );
-
-  await app.startAllMicroservices();
+  await app.listen();
+  Logger.log(`🚀 Auth microservice is running on gRPC: ${env.AUTH_GRPC_BIND}`);
 }
-bootstrap().catch((err) => {
-  console.error('Error starting Auth microservice:', err);
-  process.exit(1);
-});
+
+bootstrap();
