@@ -1,5 +1,5 @@
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app/modules/app.module';
+import { AppModule } from './app/app.module';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -9,9 +9,10 @@ import {
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { apiReference } from '@scalar/nestjs-api-reference';
 import { env } from './env';
+import { setupVersionedDocs } from './utils/docs';
+import { API_VERSIONS } from './constants/api';
+import { setupProxies } from './utils/proxies';
 
 async function bootstrap() {
   const adapter = new FastifyAdapter();
@@ -41,36 +42,11 @@ async function bootstrap() {
   );
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+ 
+  setupVersionedDocs(app, API_VERSIONS);
 
-  const config = new DocumentBuilder()
-    .setTitle('Recomend API')
-    .setDescription('The API documentation for the Recomend application')
-    .setVersion('1.0')
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT', // optional, arbitrary value for Swagger UI
-        in: 'header',
-        description: 'Enter JWT token',
-      },
-      'access-token', // This name is important for referencing this security scheme
-    )
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-
-  app.getHttpAdapter().get('/api-docs-json', (req, res) => {
-    res.send(document);
-  });
-  // SwaggerModule.setup('api-docs', app, document);
-  app.use(
-    '/api-docs',
-    apiReference({
-      url: '/api-docs-json',
-      withFastify: true,
-      theme: 'purple',
-    }),
-  );
+  
+  await setupProxies(app);
 
   await app.listen({
     port: env.PORT,

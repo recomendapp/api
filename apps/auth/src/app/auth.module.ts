@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
+import { AuthGrpcController } from './auth.grpc.controller';
+import { AuthHttpController } from './auth.http.controller';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { GrpcTransportModule } from '@api/transport';
@@ -12,7 +13,7 @@ import { env } from '../env';
       secret: env.SUPABASE_JWT_SECRET,
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthGrpcController, AuthHttpController],
   providers: [AuthService],
 })
 export class AuthModule {}

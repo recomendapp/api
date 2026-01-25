@@ -5,6 +5,36 @@
   "projectType": "application",
   "tags": [],
   "targets": {
+    "db-generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "drizzle-kit generate --config=apps/auth/drizzle.config.ts",
+        "cwd": "." 
+      }
+    },
+    "db-push": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["auth-generate"],
+      "options": {
+        "command": "drizzle-kit push --config=apps/auth/drizzle.config.ts",
+        "cwd": "."
+      }
+    },
+    "db-studio": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["db-push"],
+      "options": {
+        "command": "drizzle-kit studio --config=apps/auth/drizzle.config.ts --port 4983",
+        "cwd": "."
+      }
+    },
+    "auth-generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx @better-auth/cli generate --config ./apps/auth/src/lib/auth.ts --output ./apps/auth/src/db/schemas/auth.ts --yes",
+        "cwd": "."
+      }
+    },
     "build": {
       "executor": "nx:run-commands",
       "options": {
@@ -55,7 +85,7 @@
       "continuous": true,
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+      "dependsOn": ["build", "db-push"],
       "options": {
         "buildTarget": "auth:build",
         "runBuildTargetDependencies": false
