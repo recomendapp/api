@@ -1,6 +1,5 @@
-import 'dotenv/config';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './modules/app.module';
+import { AppModule } from './app/modules/app.module';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -10,17 +9,15 @@ import {
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
-import validateEnv from './utils/validateEnv';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
-
-validateEnv();
+import { env } from './env';
 
 async function bootstrap() {
   const adapter = new FastifyAdapter();
   adapter.enableCors({
     origin: true,
-    // origin: [process.env.WEB_APP_URL || 'http://localhost:3000'],
+    // origin: [env.WEB_APP_URL || 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -76,8 +73,8 @@ async function bootstrap() {
   );
 
   await app.listen({
-    port: Number(process.env.PORT) || 3000,
-    host: process.env.HOST ?? '0.0.0.0',
+    port: env.PORT,
+    host: env.HOST,
   });
 }
 bootstrap().catch((err) => {
