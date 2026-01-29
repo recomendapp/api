@@ -1,6 +1,6 @@
 services:
-  gateway:
-    image: api-gateway:latest
+  api:
+    image: api:latest
     env_file:
       - .env
     ports:

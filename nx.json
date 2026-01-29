@@ -12,9 +12,7 @@
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s"
     ],
-    "sharedGlobals": [
-      "{workspaceRoot}/.github/workflows/cd.yml"
-    ]
+    "sharedGlobals": ["{workspaceRoot}/.github/workflows/cd.yml"]
   },
   "plugins": [
     {
@@ -39,7 +37,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/gateway-e2e/**/*", "apps/auth-e2e/**/*"]
+      "exclude": ["apps/api-e2e/**/*", "apps/auth-e2e/**/*"]
     },
     {
       "plugin": "@nx/docker",
@@ -62,6 +60,11 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
+    }
+  },
+  "release": {
+    "version": {
+      "preVersionCommand": "pnpm dlx nx run-many -t build"
     }
   }
 }

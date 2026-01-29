@@ -4,11 +4,10 @@
   "license": "MIT",
   "scripts": {
     "start": "nx run-many --target=serve --all --parallel --maxParallel=5",
-    "start:gateway": "nx serve gateway",
+    "start:api": "nx serve api",
     "start:auth": "nx serve auth",
     "build": "nx run-many --target=build --all",
-    "build:gateway": "nx build gateway",
-    "build:auth": "nx build auth",
+    "build:api": "nx build api",
     "lint": "nx run-many --target=lint --all",
     "format": "nx format:write",
     "test": "nx run-many --target=test --all",
@@ -31,6 +30,7 @@
     "@nestjs/swagger": "^11.2.5",
     "@scalar/nestjs-api-reference": "^1.0.19",
     "@supabase/supabase-js": "^2.91.1",
+    "@tanstack/react-query": "^5.90.20",
     "axios": "^1.6.0",
     "better-auth": "^1.4.17",
     "class-transformer": "^0.5.1",
@@ -50,12 +50,14 @@
   "devDependencies": {
     "@better-auth/cli": "^1.4.17",
     "@eslint/js": "^9.8.0",
+    "@hey-api/openapi-ts": "0.91.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.0",
     "@nx/eslint": "22.4.1",
     "@nx/eslint-plugin": "22.4.1",
     "@nx/jest": "22.4.1",
     "@nx/js": "22.4.1",
+    "@nx/nest": "^22.4.1",
     "@nx/node": "22.4.1",
     "@nx/web": "22.4.1",
     "@nx/webpack": "22.4.1",
@@ -81,6 +83,10 @@
     "tsx": "^4.21.0",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.40.0",
+    "verdaccio": "^6.0.5",
     "webpack-cli": "^5.1.4"
+  },
+  "nx": {
+    "includedScripts": []
   }
 }
