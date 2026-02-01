@@ -10,7 +10,8 @@ import {
   VersioningType,
 } from '@nestjs/common';
 import { env } from './env';
-import { setupDocs } from './utils/docs';
+import { setupVersionedDocs } from './utils/docs';
+import { API_VERSIONS } from './constants/api';
 
 async function bootstrap() {
   const adapter = new FastifyAdapter();
@@ -18,6 +19,7 @@ async function bootstrap() {
     origin: true,
     // origin: [env.WEB_APP_URL || 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: true,
   });
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -41,11 +43,11 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  setupDocs(app);
+  setupVersionedDocs(app, API_VERSIONS);
 
   await app.listen({
-    port: env.PORT,
-    host: env.HOST,
+    port: env.API_PORT,
+    host: env.API_HOST,
   });
 }
 bootstrap().catch((err) => {

@@ -27,10 +27,6 @@ export const tmdbPerson = tmdbSchema.table(
     popularity: real(),
   },
   (table) => [
-    index('idx_tmdb_person_name_trgm').using(
-      'gin',
-      table.name.asc().nullsLast().op('gin_trgm_ops'),
-    ),
     index('idx_tmdb_person_popularity').on(table.popularity),
   ],
 );

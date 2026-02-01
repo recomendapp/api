@@ -3,3 +3,5 @@ export * from './lib/core.module';
 export * from './lib/db/client';
 // Auth
 export * from './lib/auth';
+// Modules
+export * from './lib/modules';

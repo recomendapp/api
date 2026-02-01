@@ -22,18 +22,66 @@ export const createDocument = (app: NestFastifyApplication): OpenAPIObject => {
   return document;
 };
 
-export const setupDocs = (app: NestFastifyApplication) => {
-  const document = createDocument(app);
+export const createVersionedDocument = (
+  app: NestFastifyApplication,
+  version: string,
+): OpenAPIObject => {
+  const config = new DocumentBuilder()
+    .setTitle(`API ${version}`)
+    .setVersion(version)
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        in: 'header',
+        description: 'Enter JWT token',
+      },
+      'access-token',
+    )
+    .build();
 
-  app.getHttpAdapter().get('/api-json', (req, res) => {
-    res.send(document);
+  const document = SwaggerModule.createDocument(app, config, {
+    operationIdFactory: (controllerKey, methodKey) =>
+      `${version}_${controllerKey}_${methodKey}`,
   });
+
+  document.paths = Object.fromEntries(
+    Object.entries(document.paths).filter(([path]) => {
+      if (path.startsWith(`/${version}`)) return true;
+      if (/^\/v\d+/.test(path)) return false;
+      return true;
+    }),
+  );
+
+  return document;
+}
+
+export const setupVersionedDocs = (app: NestFastifyApplication, versions: string[]) => {
+  for (const version of versions) {
+    const document = createVersionedDocument(app, version);
+
+    // JSON
+    app.getHttpAdapter().get(`/${version}/api-json`, (_, res) => {
+      res.send(document);
+    });
+  }
+
   app.use(
     '/docs',
     apiReference({
-      url: '/api-json',
       withFastify: true,
       theme: 'purple',
+      sources: [
+        ...versions.map((version) => ({
+          title: version,
+          url: `/${version}/api-json`,
+        })),
+        {
+          title: 'Auth',
+          url: '/auth/open-api/generate-schema',
+        },
+      ],
     }),
   );
-};
+}

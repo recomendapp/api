@@ -1,5 +1,5 @@
 import { betterAuth } from 'better-auth';
-import { openAPI, username } from 'better-auth/plugins';
+import { magicLink, openAPI, username } from 'better-auth/plugins';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from './db/client';
 
@@ -8,15 +8,21 @@ export const auth = betterAuth({
     provider: 'pg',
   }),
   basePath: '/auth',
-  plugins: [username(), openAPI()],
+  plugins: [
+    username(),
+    openAPI(),
+    magicLink({
+      disableSignUp: true,
+      sendMagicLink: async () => { /* No-op for CLI */ },
+    })
+  ],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
   },
-  experimental: {
-    joins: true,
+  emailVerification: {
+    autoSignInAfterVerification: true,
   },
-  // Custom Core Schema
   user: {
     additionalFields: {
       usernameUpdatedAt: {
@@ -26,5 +32,8 @@ export const auth = betterAuth({
         input: false,
       },
     },
+  },
+  experimental: {
+    joins: true,
   },
 });

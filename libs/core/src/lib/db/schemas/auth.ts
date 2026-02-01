@@ -7,6 +7,7 @@ import {
   index,
   pgSchema,
 } from 'drizzle-orm/pg-core';
+import { profile } from './user';
 
 export const authSchema = pgSchema('auth');
 
@@ -21,7 +22,7 @@ export const user = authSchema.table('user', {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-  username: text('username').unique(),
+  username: text('username').unique().notNull(),
   displayUsername: text('display_username'),
   usernameUpdatedAt: timestamp('username_updated_at'),
 });
@@ -85,9 +86,13 @@ export const verification = authSchema.table(
   (table) => [index('verification_identifier_idx').on(table.identifier)],
 );
 
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ many, one }) => ({
   sessions: many(session),
   accounts: many(account),
+  profile: one(profile, {
+    fields: [user.id],
+    references: [profile.id],
+  }),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({

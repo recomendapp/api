@@ -13,7 +13,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { tmdbMovie, tmdbTvSeries } from './tmdb';
 import { user } from './auth';
-import { sql } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 
 /* -------------------------------------------------------------------------- */
 /*                                    MOVIE                                   */
@@ -42,8 +42,12 @@ export const logMovie = pgTable(
 
     watchCount: integer('watch_count').default(1).notNull(),
 
-    firstWatchedAt: timestamp('first_watched_at', { withTimezone: true }),
-    lastWatchedAt: timestamp('last_watched_at', { withTimezone: true }),
+    firstWatchedAt: timestamp('first_watched_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    lastWatchedAt: timestamp('last_watched_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => [
     index('idx_log_movie_movie_id').on(table.movieId),
@@ -61,6 +65,13 @@ export const logMovie = pgTable(
     ),
   ],
 );
+export const logMovieRelations = relations(logMovie, ({ many, one }) => ({
+  movie: one(tmdbMovie, {
+    fields: [logMovie.movieId],
+    references: [tmdbMovie.id],
+  }),
+  watchedDates: many(logMovieWatchedDate),
+}));
 
 export const logMovieWatchedDate = pgTable(
   'log_movie_watched_date',
@@ -78,6 +89,12 @@ export const logMovieWatchedDate = pgTable(
     index('idx_log_movie_watched_date_watched_date').on(table.watchedDate),
   ],
 );
+export const logMovieWatchedDateRelations = relations(logMovieWatchedDate, ({ one }) => ({
+  logMovie: one(logMovie, {
+    fields: [logMovieWatchedDate.logMovieId],
+    references: [logMovie.id],
+  }),
+}));
 
 /* -------------------------------------------------------------------------- */
 

@@ -26,11 +26,6 @@ export const tmdbCompany = tmdbSchema.table(
     })
       .onDelete('set null')
       .onUpdate('cascade'),
-
-    index('idx_tmdb_company_name_trgm').using(
-      'gin',
-      table.name.asc().nullsLast().op('gin_trgm_ops'),
-    ),
   ],
 );
 

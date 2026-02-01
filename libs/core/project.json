@@ -26,7 +26,6 @@
     },
     "db-push": {
       "executor": "nx:run-commands",
-      "dependsOn": ["auth-generate"],
       "options": {
         "command": "drizzle-kit push --config=libs/core/drizzle.config.ts",
         "cwd": "."
@@ -34,7 +33,6 @@
     },
     "db-studio": {
       "executor": "nx:run-commands",
-      "dependsOn": ["db-push"],
       "options": {
         "command": "drizzle-kit studio --config=libs/core/drizzle.config.ts --port 4984",
         "cwd": "."

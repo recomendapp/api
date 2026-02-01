@@ -17,11 +17,11 @@
     "paths": {
       "@api/protos": ["libs/protos/src/index.ts"],
       "@api/transport": ["libs/transport/src/index.ts"],
-      "@api/env": ["libs/env/src/index.ts"],
-      "@api/auth": ["libs/auth/src/index.ts"],
-      "@api/core": ["libs/core/src/index.ts"],
-      "@api/core/schemas": ["libs/core/src/lib/db/schemas/index.ts"],
-      "@recomendapp/api-js": ["packages/api-js/src/index.ts"]
+      "@libs/env": ["libs/env/src/index.ts"],
+      "@libs/core": ["libs/core/src/index.ts"],
+      "@libs/core/schemas": ["libs/core/src/lib/db/schemas/index.ts"],
+      "@recomendapp/api-js": ["packages/api-js/src/index.ts"],
+      "@shared/mailer": ["libs/shared/mailer/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
